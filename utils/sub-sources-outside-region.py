@@ -71,10 +71,10 @@ def fixsymlinks():
         if os.path.islink(symsolname):
             print('Symlink ' + symsolname + ' already exists, recreating')
             os.unlink(symsolname)
-            os.symlink(os.path.relpath('../../%s_%s_smoothed.npz' % (ddsols, start_time)), symsolname)
+            os.symlink(os.path.realpath('%s_%s_smoothed.npz' % (ddsols, start_time)), symsolname)
         else:
             print('Symlink ' + symsolname + ' does not yet exist, creating')
-            os.symlink(os.path.relpath('../../%s_%s_smoothed.npz' % (ddsols, start_time)), symsolname)
+            os.symlink(os.path.realpath('%s_%s_smoothed.npz' % (ddsols, start_time)), symsolname)
 
     return
 
