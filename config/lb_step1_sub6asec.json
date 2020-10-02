@@ -5,17 +5,26 @@
         "queue": "normal",
         "command":"genericpipeline.py -d -c sing_pipeline.cfg $PARSET ",
         "variables": {
-            "OBSID": "",
-            "PIPELINE_STEP": "",
-            "RESULTS_DIR": "gsiftp://gridftp.grid.sara.nl:2811/pnfs/grid.sara.nl/data/lofar/user/sksp/diskonly/pipelines/SKSP/lbtest",
+            "OBSID": "$OBSID",
+            "PIPELINE_STEP": "lb_sub6asec_targ1",
+            "RESULTS_DIR": "gsiftp://gridftp.grid.sara.nl:2811/pnfs/grid.sara.nl/data/lofar/user/lofarvwf/disk/ELAIS-N1",
             "ABN": "000",
-            "STARTSB": "000"
+            "STARTSB": "000",
+	    "PICAS_API_VERSION": "spider"
         },
         "wholenode": false
     },
     "Token": {
         "status": "queued",
         "times": {},
+        "upload": {
+            "add_date": false,
+            "date_granularity":"hour",
+            "gzip": false,
+            "location": "$RESULTS_DIR/$OBSID/step1_subtract_lotss",
+            "overwrite": true,
+            "template": "$OBSID_lb_sub6asec_ABN$ABN"
+        },
         "variables": {
             "_attachments": {
                 "PARSET": "step1_subtract_lotss.parset",
@@ -25,34 +34,26 @@
                 "$OBSID": "OBSID",
                 "$PIPELINE_STEP": "PIPELINE_STEP",
                 "$RESULTS_DIR": "RESULTS_DIR",
-                "$ABN$": "ABN",
-                "$STARTSB": "STARTSB"
+                "$STARTSB": "STARTSB",
+                "$ABN": "ABN"
             }
-        },
-        "upload": {
-            "add_date": false,
-            "date_granularity":"hour",
-            "gzip": false,
-            "location": "$RESULTS_DIR/$OBSID",
-            "overwrite": false,
-            "template": "$OBSID_lb_sub6asec_$STARTSB_"
         }
     },
     "container": {
         "singularity": {
-            "SIMG": "gsiftp://gridftp.grid.sara.nl:2811/pnfs/grid.sara.nl/data/lofar/user/sksp/distrib/software/lofar_sksp_ddf_gainscreens_premerge.simg"
+            "SIMG": "gsiftp://gridftp.grid.sara.nl:2811/pnfs/grid.sara.nl/data/lofar/user/sksp/distrib/software/lofar_sksp_fedora27_ddf_slurmfix.sif"
         }
     },
     "sandbox": {
         "git": {
-            "branch": "prefactor_spider",
-            "url": "https://github.com/apmechev/GRID_Sandbox.git"
+            "branch": "prefactor_spider_test",
+            "url": "https://git.astron.nl/astron-sdc/GRID_Sandbox.git"
         },
         "scripts": [
             {
                 "prefactor": {
                     "branch": "master",
-                    "checkout_dir": "prefactor",
+                    "checkout_dir": "pipelines/prefactor",
                     "url": "https://github.com/lofar-astron/prefactor.git"
                 }
             }
