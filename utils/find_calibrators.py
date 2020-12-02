@@ -88,7 +88,7 @@ steps=[explode]
         parset += '''explode.steps=[shift,avg1,adder,filter,averager,msout]
 '''
 
-    parset += '''explode.replaceparms = [shift.phasecenter, msout.name]
+    parset += '''explode.replaceparms = [shift.phasecenter, applybeam.direction, msout.name]
 
 shift.type=phaseshift
 
@@ -96,6 +96,9 @@ shift.type=phaseshift
 avg1.type = average
 avg1.timeresolution = 4
 avg1.freqresolution = 48.82kHz
+
+applybeam.type=applybeam
+applybeam.beammode=full
 '''
     if sols_phase is not None:
         parset += '''apply1.type = applycal
@@ -126,6 +129,7 @@ msout.overwrite = True
 '''
     parset += 'msout.name=[' + ','.join(list(map(lambda s: prefix + 'P{:d}.ms'.format(int(s)), candidates['Source_id']))) + ']\n'
     parset += 'shift.phasecenter=[' + ','.join(list(map(lambda x: '[{:f}deg,{:f}deg]'.format(x[0], x[1]), candidates['RA', 'DEC']))) + ']\n'
+    parset += 'applybeam.direction=[' + ','.join(list(map(lambda x: '[{:f}deg,{:f}deg]'.format(x[0], x[1]), candidates['RA', 'DEC']))) + ']\n'
     return parset
 
 
@@ -149,9 +153,10 @@ if __name__ == '__main__':
     candidates = find_candidates(args.catalog)
     candidates.write('dde_calibrators.csv', format='ascii.csv')
     if ast.literal_eval(args.writepset):
-        Nchunks = (len(candidates) // 20) + 1
+        chunksize = 10
+        Nchunks = (len(candidates) // chunksize) + 1
         for i in xrange(Nchunks):
-            candidate_chunk = candidates[10 * i:10 * (i + 1)]
+            candidate_chunk = candidates[chunksize * i:chunksize * (i + 1)]
             if args.sols_phase:
                 parset = make_parset(candidate_chunk, sols_phase=args.sols_phase, solset_phase=args.ss_phase, prefix=args.prefix)
                 if args.sols_amp:
